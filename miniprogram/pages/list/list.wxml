@@ -1,0 +1,45 @@
+<!--pages/list/list.wxml-->
+<view class="container">
+<view class="search">
+    <view><input placeholder="关键字" /></view>
+    <view class="btn">
+      <button type="primary" size="mini" class="btn-search" bindtap="search">查询</button>
+    </view>
+  </view>
+<view class="list">
+<view class='item' wx:for="{{[1,2,3,4,5,6,7,8,9]}}">
+  <view>
+    <view class="label">编号：</view>
+    <view class="content">2018-09-02-cs-009</view>
+  </view>
+  <view>
+      <view class="label">标题:</view><view class="content">文件标题</view>
+    </view>
+    <view>
+      <view class="label">申请时间:</view><view class="content">文件申请时间</view>
+    </view>
+    <view>
+      <view class="label">申请人:</view><view class="content">申请人姓名</view>
+    </view>
+    <view>
+      <view class="label">申请人电话:</view><view class="content">申请人电话</view>
+    </view>
+    <view>
+      <view class="label">申请人手机:</view><view class="content">申请人手机</view>
+    </view>
+    <view>
+      <view class="label">状态:</view><view class="content">已呈送</view>
+    </view>
+    <view>
+      <view class="label">呈送给：</view>
+      <view class="content">
+        张主任，刘主任
+      </view>
+    </view>
+    <view>
+      <view class="label">备注</view>
+      <view class="content">  打回重填</view>
+    </view>
+</view>
+</view>
+</view>

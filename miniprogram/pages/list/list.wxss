@@ -1,0 +1,53 @@
+/* pages/list/list.wxss */
+
+
+.search {
+  display: flex; 
+
+  padding-bottom: 20rpx;
+  border-bottom: 1rpx solid #e4e4e4;
+}
+
+.search > view {
+    flex: 1;
+}
+
+.search .btn {
+  text-align: right;
+}
+
+.search button {
+  font-size: 28rpx;
+  margin-left: 10rpx;
+}
+
+
+.item {
+  padding-bottom: 30rpx;
+  border-bottom: 1rpx solid #e4e4e4;
+}
+
+.item >view {
+  display: flex;
+  margin-top: 20rpx;
+}
+
+.label {
+  width: 200rpx;
+  margin-right: 20rpx;
+  
+}
+
+.content {
+  flex: 1;
+  color: #808080;
+  font-size: 32rpx;
+}
+
+.container {
+  padding: 30rpx;
+}
+
+.list {
+  background-color: #fff;
+}
