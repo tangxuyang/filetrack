@@ -42,16 +42,7 @@
     <view>
       <view class="label">状态:</view><view class="content">{{fileInfo.statusStr}}</view>
     </view>
-    <view>
-      <view class="label">呈送给：</view>
-      <view class="content">
-        <radio-group bindchange="checkboxChange">
-          <label class="radio" wx:for="{{targets}}" style="width: 50%; display: inline-block; margin-bottom: 10rpx;">
-            <radio value="{{item.name}}" checked="{{item.checked}}" disabled="{{item.disabled}}"/>{{item.name}}
-          </label>
-        </radio-group>
-      </view>
-    </view>
+    
     <view wx:if="{{fileInfo.status==2}}">
         <textarea placeholder='领导意见' style='height: 200rpx; width: 100%'></textarea>
     </view>
@@ -79,5 +70,31 @@
     <button class="btn-revoke" type='primary' wx:if="{{fileInfo.status==2}}" bindtap='revoke'>收回</button>
     <button class="btn-return" type='warn' wx:if="{{fileInfo.status==3}}" bindtap='giveBack'>归还</button>
     <button class="btn-finish" type='primary' wx:if="{{fileInfo.status==4}}" bindtap='finishBack'>已归还</button>
+  </view>
+</view>
+<view class="dialog director-dialog">
+  <view class="dialog-container">
+    <view class="dialog-title">
+      呈送校办主任
+    </view>
+    <view class="dialog-body">
+      <view>主任</view>
+      <view>张主任</view>
+      <view>张主任</view>
+      <view>张主任</view>
+      <view>张主任</view>
+      <view>张主任</view>
+      <view>张主任</view>
+      <view>张主任</view>
+      <view>张主任</view>
+      <view>张主任</view>
+      <view>张主任</view>
+      <view>张主任</view>
+      <view>张主任</view>
+    </view>
+    <view class="dialog-footer">
+      <view class="btn btn-primary">确定</view>
+      <view class="btn btn-warn">关闭</view>
+    </view>
   </view>
 </view>

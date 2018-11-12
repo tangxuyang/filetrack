@@ -68,3 +68,71 @@ page {
   margin-top: 30rpx;
   display: flex;
 }
+
+.dialog {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background-color: rgba(0,0,0, .35);
+}
+
+.dialog .dialog-container {
+  position: absolute;
+  height: auto;
+  margin: 50rpx auto;
+  left: 10%;
+  right: 10%;
+  top: 20%;
+  bottom: 20%;
+  background-color: #fff;
+  border-radius: 16rpx;
+  overflow: hidden;
+}
+
+.dialog .dialog-title {
+  border-bottom: 1rpx solid rgba(33,22,0,.35);
+  height: 100rpx;
+  line-height: 100rpx;
+  text-align: center;
+  position: absolute;
+  top: 0;
+  width: 100%;
+}
+.dialog-open {
+  overflow: hidden;
+}
+
+.dialog-body {
+  padding-bottom: 100rpx;
+  padding-top: 100rpx;
+  overflow: auto;
+  height: 100%;
+  padding: 20rpx;
+}
+
+.dialog-footer {
+  position: absolute;
+  width: 100%;
+  bottom: 0;
+  height: 100rpx;
+  display: flex;
+
+
+}
+
+.dialog-footer .btn {
+  flex: 1;
+  border-radius: none;
+  text-align: center;
+  line-height: 100rpx;
+}
+
+.btn-primary {
+  background-color: green;
+}
+
+.btn-warn {
+  background-color: red;
+}

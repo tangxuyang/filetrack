@@ -13,11 +13,14 @@ Page({
       senderPhone: '63293021',
       senderMobile: '1882903949',
       senderEmail: "test@test.com",
+      // ['', '申请状态', '接收', '不接收退回', '呈送校办主任', '呈送校领导', '签出成功通知取件', '签出不成功通知取件']
       status: 1,// 1: 未呈送， 2: 已呈送， 3: 收回， 4: 归还中， 5: 已归还
-      statusStr: '未呈送',
+      statusStr: '申请状态',
       target: ''
     },
     fileCode: "",
+    directors: [], // 校办主任
+    leader: [], // 校领导
     targets: [
       {name: '张主任', checked: false, disabled: false}, 
       {name: '王主任', checked: false, disabled: true},
@@ -31,29 +34,52 @@ Page({
   },
 
   getStatusStr: function(status){
-    var map = ['', '未呈送', '已呈送', '已收回', '归还中', '已归还'];
-    return map[status];
+    var map = ['', '申请状态', '接收', '不接收退回', '呈送校办主任', '呈送校领导', '签出成功通知取件', '签出不成功通知取件'];
+    return map[status] || '';
   } ,
-  onLoad: function() {
+
+  // 获取校办领导列表
+  getDirectors: function(cb) {
     let self = this;
-    // TODO: 调用接口查询呈送的列表
     request({
-      url: apis.targets,
+      url: apis.directors,
       success: function(res) {
-        if(res.status == 1) {
-          let targets = res.data;
-          // self.setData({
-          //   targets: targets.map(function(t,i) {
-          //     return {
-          //       name: t,
-          //       checked: false,
-          //       disabled: false
-          //     }
-          //   })
-          // });
-        }
+        let directors = res.data;// TODO: 接口字段
+        self.setData({
+          directors: directors.map(function(d, i) {
+            return {
+              name: d,
+              id: d
+            }
+          })
+        })
       }
     });
+  },
+
+  // 获取校领导列表
+  getLeaders: function() {
+    let self = this;
+    request({
+      url: apis.leaders,
+      success: function (res) {
+        let leaders = res.data;// TODO: 接口字段
+        self.setData({
+          leaders: leaders.map(function (l, i) {
+            return {
+              name: l,
+              id: l
+            }
+          })
+        })
+      }
+    });
+  },
+
+  onLoad: function() {
+    let self = this;
+    this.getDirectors();
+    this.getLeaders();
   },
   scan: function() {
     let self = this;
@@ -100,111 +126,104 @@ Page({
       }
     });
   },
-  // 呈送
-  send: function() {
-    // wx.showModal({
-    //   title: '提示',
-    //   content: '调用呈送接口',
-    // })
+
+  info: function(msg) {
+    wx.showModal({
+      title: '提示',
+      content: msg,
+    })
+  },
+  // 接收
+  receive: function() {
+    this.info("调用接收接口更改申请的状态为接收");
+
     let self = this;
-    // TODO: 调用呈送接口
     request({
-      url: apis.changeStatus,
+      url: apis.receiver,
       data: {
-        fileCode: self.data.fileInfo.code,
-        status: 2
+        fildCode: self.data.fileInfo.code
       },
       success: function(res) {
-        if(res.status == 1) {
+        if(res.status === 1) {
           self.setData({
             "fileInfo.status": 2,
             "fileInfo.statusStr": self.getStatusStr(2)
-          });
-        }
-      }
-    });  
-  },
-
-  // 收回
-  revoke: function() {
-    // wx.showModal({
-    //   title: '提示',
-    //   content: '调用收回接口',
-    // })
-    let self = this;
-    let status = 3;
-    // TODO: 调用收回接口
-    request({
-      url: apis.changeStatus,
-      data: {
-        fileCode: self.data.fileInfo.code,
-        remark: self.data.fileInfo.remark,
-        status: status,
-      },
-
-      success: function(res) {
-        if(res.status == 1) {
-          self.setData({
-            "fileInfo.status": status,
-            "fileInfo.statusStr": self.getStatusStr(status),
-            "historyd": self.data.history.push({}),// 把记录添加到history列表中
-            "fileInfo.remark": ""
-          });
-        }
-      }
-    })
-    
-  },
-
-  // 归还完成（已归还）
-  finishBack: function() {
-    // wx.showModal({
-    //   title: '提示',
-    //   content: '调用完成接口',
-    // })
-    let self = this;
-    let status = 5;
-    // TODO: 调用归还接口
-    request({
-      url: apis.changeStatus,
-      data: {
-        fileCode: self.data.fileInfo.code,
-        status: status
-      },
-      success: function(res) {
-        if(res.status == 1) {
-          self.setData({
-            "fileInfo.status": status,
-            "fileInfo.statusStr": self.getStatusStr(status)
           })
         }
       }
     });
   },
 
-  // 归还文件
+  // 不接收退回
   giveBack: function() {
-    // wx.showModal({
-    //   title: '提示',
-    //   content: '调用归还接口',
-    // })
     let self = this;
-    let status = 4;// 归还中
+    this.info("调用退回接口更改状态为不接收退回");
+
     request({
-      url: apis.changeStatus,
+      url: apis.giveBack,
       data: {
-        fileCode: self.data.fileInfo.code,
-        status: status
+        fileCode: self.data.fileInfo.code
       },
       success: function(res) {
-        if(res.status == 1) {
+        if(res.status === 1) {
           self.setData({
-            "fileInfo.status": status,
-            "fileInfo.statusStr": self.getStatusStr(status)
-          });
+            "fileInfo.status": 3,
+            "fileInfo.statusStr": self.getStatusStr(3)
+          })
         }
       }
-    })
+    });
+  },
+
+  // 呈送校办主任
+  sendToDirector() {
+    let self = this;
+  },
+
+  // 呈送校领导
+  sendToLeader() {
+    let self = this;
+  },
+
+  // 签出成功通知取件
+  checkoutSuccessNotify: function() {
+    let self = this;
+    this.info("调用签出成功通知取件接口，更改状态为签出成功通知取件状态");
+    request({
+      url: apis.checkoutSuccess,
+      data: {
+        fileCode: self.data.fileInfo.code
+      },
+      success: function (res) {
+        if (res.status === 1) {
+          self.setData({
+            "fileInfo.status": 6,
+            "fileInfo.statusStr": self.getStatusStr(6)
+          })
+        }
+      }
+    });
+  },
+
+  //  签出不成功通知取件
+  checkoutFailNotify: function() {
+    let self = this;
+    this.info("调用签出不成功通知取件接口，更改状态为签出不成功通知取件状态");
+
+    request({
+      url: apis.checkoutFail,
+      data: {
+        fileCode: self.data.fileInfo.code
+      },
+      success: function(res) {
+        if(res.status === 1) {
+          self.setData({
+           "fileInfo.status": 7,
+           "fileInfo.statusStr": self.getStatusStr(7) 
+          })
+        }
+      }
+    });
   },
 
   // 点击呈送记录切换展开与收起状态
