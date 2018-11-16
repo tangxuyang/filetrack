@@ -19,22 +19,23 @@ Page({
       target: ''
     },
     fileCode: "",
-    directors: [], // 校办主任
-    leader: [], // 校领导
-    targets: [
-      {name: '张主任', checked: false, disabled: false}, 
-      {name: '王主任', checked: false, disabled: true},
-      {name: '朱主任', checked: false, disabled: false},
-      {name: '刘主任', checked: false, disabled: false},
-      {name: '马主任', chekced: false, disabled: false},
-      {name: '李主任', checked: false, disabled: false}
-      ],
+    directors: ["张主任", "马主任", "李主任", "黄主任", "王主任"], // 校办主任
+    leaders: ["张领导", "马领导", "李领导", "黄领导", "王领导"], // 校领导
+    // targets: [
+    //   {name: '张主任', checked: false, disabled: false}, 
+    //   {name: '王主任', checked: false, disabled: true},
+    //   {name: '朱主任', checked: false, disabled: false},
+    //   {name: '刘主任', checked: false, disabled: false},
+    //   {name: '马主任', chekced: false, disabled: false},
+    //   {name: '李主任', checked: false, disabled: false}
+    //   ],
+    // array: ['美国', '中国', '巴西', '日本'],
     history: [{sendTime: '2018-09-02', target: '马主任', remark: '打回重做！！'}],
     isExpand: false
   },
 
   getStatusStr: function(status){
-    var map = ['', '申请状态', '接收', '不接收退回', '呈送校办主任', '呈送校领导', '签出成功通知取件', '签出不成功通知取件'];
+    var map = ['', '申请状态', '已接收', '不接收退回', '呈送校办主任', '呈送校领导', '呈送文件收回', '签出成功通知取件', '签出不成功通知取件'];
     return map[status] || '';
   } ,
 
@@ -78,27 +79,48 @@ Page({
 
   onLoad: function() {
     let self = this;
-    this.getDirectors();
-    this.getLeaders();
+    // this.getDirectors();
+    // this.getLeaders();
+
+    wx.getSetting({
+      success(res) {
+        if (res.authSetting['scope.userInfo']) {
+          // 已经授权，可以直接调用 getUserInfo 获取头像昵称
+          wx.getUserInfo({
+            success: function (res) {
+              console.log(res)
+            }
+          })
+        }
+      }
+    })
   },
   scan: function() {
     let self = this;
     wx.scanCode({
       success: function(res) {
         // 要求文件的二维码是http://xxxx.com?filecode=mmmm
-        let result = res.result;
-        let temp = result.split('filecode=');
-        let fileCode = tempo[1];
+        // let result = res.result;
+        // let temp = result.split('filecode=');
+        // let fileCode = tempo[1];
+        let fileCode = res.result;
         if(fileCode) {// 文件编号
+          self.info("调用查询接口查询文件：" + fileCode);
           self.searchFile(fileCode);
         }
       }
     });
   },
+  handeInput: function(e) {
+    this.setData({
+      fileCode: e.detail.value
+    })
+  },
   search: function() {
     let self = this;
     let fileCode = this.data.fileCode && this.data.fileCode.trim();
     if(fileCode) {
+      this.info("调用查询接口:" + fileCode);
       self.searchFile(fileCode);
     }
     // wx.showModal({
@@ -108,6 +130,7 @@ Page({
   },
   searchFile: function(fileCode) {
     let self = this;
+    
     // TODO: 调用文件详情接口
     request({
       url: apis.fileDetail,
@@ -178,11 +201,45 @@ Page({
   // 呈送校办主任
   sendToDirector() {
     let self = this;
+
+    this.info("调用呈送校办主任接口");
+
+    request({
+      url: apis.giveBack,
+      data: {
+        fileCode: self.data.fileInfo.code
+      },
+      success: function (res) {
+        if (res.status === 1) {
+          self.setData({
+            "fileInfo.status": 4,
+            "fileInfo.statusStr": self.getStatusStr(4)
+          })
+        }
+      }
+    });
   },
 
   // 呈送校领导
   sendToLeader() {
     let self = this;
+
+    this.info("调用呈送校领导接口");
+
+    request({
+      url: apis.giveBack,
+      data: {
+        fileCode: self.data.fileInfo.code
+      },
+      success: function (res) {
+        if (res.status === 1) {
+          self.setData({
+            "fileInfo.status": 5,
+            "fileInfo.statusStr": self.getStatusStr(5)
+          })
+        }
+      }
+    });
   },
 
   // 签出成功通知取件
@@ -197,8 +254,8 @@ Page({
       success: function (res) {
         if (res.status === 1) {
           self.setData({
-            "fileInfo.status": 6,
-            "fileInfo.statusStr": self.getStatusStr(6)
+            "fileInfo.status": 7,
+            "fileInfo.statusStr": self.getStatusStr(7)
           })
         }
       }
@@ -218,8 +275,29 @@ Page({
       success: function(res) {
         if(res.status === 1) {
           self.setData({
-           "fileInfo.status": 7,
-           "fileInfo.statusStr": self.getStatusStr(7) 
+           "fileInfo.status": 8,
+           "fileInfo.statusStr": self.getStatusStr(8) 
+          })
+        }
+      }
+    });
+  },
+
+  // 收回呈送文件
+  revoke: function() {
+    let self = this;
+    this.info("调用收回呈送文件接口");
+
+    request({
+      url: apis.checkoutFail,
+      data: {
+        fileCode: self.data.fileInfo.code
+      },
+      success: function (res) {
+        if (res.status === 1) {
+          self.setData({
+            "fileInfo.status": 6,
+            "fileInfo.statusStr": self.getStatusStr(6)
           })
         }
       }

@@ -9,7 +9,7 @@
 <view class="list">
 <view class='item' wx:for="{{[1,2,3,4,5,6,7,8,9]}}">
   <view>
-    <view class="label">编号：</view>
+    <view class="label">呈送编号：</view>
     <view class="content">2018-09-02-cs-009</view>
   </view>
   <view>
@@ -17,6 +17,15 @@
     </view>
     <view>
       <view class="label">申请时间:</view><view class="content">文件申请时间</view>
+    </view>
+    <view>
+      <view class="label">发文单位:</view><view class="content">发文单位</view>
+    </view>
+    <view>
+      <view class="label">发文日期:</view><view class="content">发文日期</view>
+    </view>
+    <view>
+      <view class="label">收文日期:</view><view class="content">收文日期</view>
     </view>
     <view>
       <view class="label">申请人:</view><view class="content">申请人姓名</view>
@@ -28,6 +37,9 @@
       <view class="label">申请人手机:</view><view class="content">申请人手机</view>
     </view>
     <view>
+      <view class="label">申请人邮件:</view><view class="content">xxx@xxx.com</view>
+    </view>
+    <view>
       <view class="label">状态:</view><view class="content">已呈送</view>
     </view>
     <view>
@@ -36,10 +48,11 @@
         张主任，刘主任
       </view>
     </view>
+    <!--
     <view>
       <view class="label">备注</view>
       <view class="content">  打回重填</view>
-    </view>
+    </view>-->
 </view>
 </view>
 </view>

@@ -2,7 +2,7 @@
 <view class="container">
 <navigator url="/pages/list/list" style="font-size: 28rpx; margin-bottom: 20rpx; color: #909090; text-align: right">跳转到列表页</navigator>
   <view class="search">
-    <view><input placeholder="文件编号" value='{{fileCode}}'/></view>
+    <view><input placeholder="文件编号" value='{{fileCode}}' bindinput='handeInput'/></view>
     <view class="btn">
       <button size="mini" class="btn-scan" bindtap='scan'>扫码</button>
       <button type="primary" size="mini" class="btn-search" bindtap="search">查询</button>
@@ -42,10 +42,11 @@
     <view>
       <view class="label">状态:</view><view class="content">{{fileInfo.statusStr}}</view>
     </view>
-    
+    <!--
     <view wx:if="{{fileInfo.status==2}}">
         <textarea placeholder='领导意见' style='height: 200rpx; width: 100%'></textarea>
     </view>
+    -->
   </view>
 
   <view class="history">
@@ -58,18 +59,25 @@
       <view>
         <view class="label">呈送目标人:</view><view class="content">{{item.target}}</view>
       </view>
-      <view>
+      <!--<view>
         <view class="label">审批意见:</view><view class="content">{{item.remark}}</view>
-      </view>
+      </view>-->
     </view>
     </view>
   </view>
-
+  
   <view class="operate" style="margin-top: 30rpx;">
-    <button class="btn-send" type='primary' wx:if="{{fileInfo.status==1|| fileInfo.status==3}}" bindtap='send'>呈送</button>
-    <button class="btn-revoke" type='primary' wx:if="{{fileInfo.status==2}}" bindtap='revoke'>收回</button>
-    <button class="btn-return" type='warn' wx:if="{{fileInfo.status==3}}" bindtap='giveBack'>归还</button>
-    <button class="btn-finish" type='primary' wx:if="{{fileInfo.status==4}}" bindtap='finishBack'>已归还</button>
+    <button class="btn" type='primary' wx:if="{{fileInfo.status==1}}" bindtap='receive'>接收</button>
+    <button class="btn" type='primary' wx:if="{{fileInfo.status==1}}" bindtap='giveBack'>不接收退回</button>
+    <picker value="{{index}}" range="{{directors}}" bindchange="sendToDirector">
+      <button class="btn" type='primary' wx:if="{{fileInfo.status==2 || fileInfo.status==6}}">呈送校办主任</button>
+    </picker>
+    <picker value="{{index}}" range="{{leaders}}" bindchange="sendToLeader">
+      <button class="btn" type='primary' wx:if="{{fileInfo.status==2 || fileInfo.status==6}}">呈送校领导</button>
+    </picker>
+    <button class="btn" type='primary' wx:if="{{fileInfo.status==4 || fileInfo.status==5}}" bindtap='revoke'>收回呈送文件</button>
+    <button class="btn" type='primary' wx:if="{{fileInfo.status==6}}" bindtap='checkoutSuccessNotify'>签出成功通知取件</button>
+    <button class="btn" type='primary' wx:if="{{fileInfo.status==6}}" bindtap='checkoutFailNotify'>签出不成功通知取件</button>
   </view>
 </view>
 <view class="dialog director-dialog">
@@ -78,19 +86,7 @@
       呈送校办主任
     </view>
     <view class="dialog-body">
-      <view>主任</view>
-      <view>张主任</view>
-      <view>张主任</view>
-      <view>张主任</view>
-      <view>张主任</view>
-      <view>张主任</view>
-      <view>张主任</view>
-      <view>张主任</view>
-      <view>张主任</view>
-      <view>张主任</view>
-      <view>张主任</view>
-      <view>张主任</view>
-      <view>张主任</view>
+      
     </view>
     <view class="dialog-footer">
       <view class="btn btn-primary">确定</view>
