@@ -3,6 +3,22 @@ const app = getApp()
 const request = require('../../utils/request').default;
 const apis = require('../../utils/apis').default;
 
+const sha1 = require('../../utils/hmac').default;
+
+
+function padding(n) {
+  if(n<10) {
+    return '0' + n;
+  } else
+  {
+    return n + "";
+  }
+}
+function timestamp() {
+  let now = new Date();
+  return now.getFullYear() + padding(now.getMonth()+1)+padding(now.getDate())+padding(now.getHours()) + padding(now.getMinutes()) + padding(now.getSeconds());
+}
+
 Page({
   data: {
     fileInfo: {
@@ -81,7 +97,16 @@ Page({
     let self = this;
     // this.getDirectors();
     // this.getLeaders();
-
+    request({
+      url: "http://myform.fudan.edu.cn/api/v1/xwlwcl",
+      data: {
+        wjcpbh: "helsljf",
+        timestamp: timestamp()
+      },
+      success: function(res){
+        console.log('response:' , res);
+      }
+    });
     wx.getSetting({
       success(res) {
         if (res.authSetting['scope.userInfo']) {
