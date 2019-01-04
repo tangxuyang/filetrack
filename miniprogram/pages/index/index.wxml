@@ -10,34 +10,43 @@
   </view>
   <view class="basic-info">
     <view>
-      <view class="label">呈批编号:</view><view class="content">{{fileInfo.code}}</view>
+      <view class="label">呈批编号:</view><view class="content">{{fileInfo.wjcpbh}}</view>
     </view>
     <view>
-      <view class="label">文件标题:</view><view class="content">{{fileInfo.title}}</view>
+      <view class="label">文件标题:</view><view class="content">{{fileInfo.wjbt}}</view>
     </view>
     <view>
-      <view class="label">申请时间:</view><view class="content">{{fileInfo.createDate}}</view>
+      <view class="label">申请时间:</view><view class="content">{{fileInfo.blqx}}</view>
     </view>
     <view>
-      <view class="label">发文单位:</view><view class="content">{{fileInfo.createDate}}</view>
+      <view class="label">发文单位:</view><view class="content">{{fileInfo.fwdw}}</view>
     </view>
     <view>
-      <view class="label">发文日期:</view><view class="content">{{fileInfo.createDate}}</view>
+      <view class="label">发文日期:</view><view class="content">{{fileInfo.fwrq}}</view>
     </view>
     <view>
-      <view class="label">收文日期:</view><view class="content">{{fileInfo.createDate}}</view>
+      <view class="label">收文日期:</view><view class="content">{{fileInfo.swrq}}</view>
     </view>
     <view>
-      <view class="label">申请人:</view><view class="content">{{fileInfo.senderName}}</view>
+      <view class="label">申请人:</view><view class="content">{{fileInfo.xm}}</view>
     </view>
     <view>
-      <view class="label">申请人电话:</view><view class="content">{{fileInfo.senderPhone}}</view>
+      <view class="label">申请人工号:</view><view class="content">{{fileInfo.gh}}</view>
     </view>
     <view>
-      <view class="label">申请人手机:</view><view class="content">{{fileInfo.senderMobile}}</view>
+      <view class="label">申请人电话:</view><view class="content">{{fileInfo.bgdh}}</view>
     </view>
     <view>
-      <view class="label">申请人邮箱:</view><view class="content">{{fileInfo.senderEmail}}</view>
+      <view class="label">申请人邮箱:</view><view class="content">{{fileInfo.contact_email}}</view>
+    </view>
+    <view>
+      <view class="label">工作单位:</view><view class="content">{{fileInfo.gzdw}}</view>
+    </view>
+    <view>
+      <view class="label">主办单位:</view><view class="content">{{fileInfo.zbdw}}</view>
+    </view>
+    <view>
+      <view class="label">会办单位:</view><view class="content">{{fileInfo.hbdw}}</view>
     </view>
     <view>
       <view class="label">状态:</view><view class="content">{{fileInfo.statusStr}}</view>
@@ -66,13 +75,13 @@
     </view>
   </view>
   
-  <view class="operate" style="margin-top: 30rpx;">
+  <view class="operate" style="margin-top: 30rpx;" wx:if="{{fileInfo.wjcpbh}}">
     <button class="btn" type='primary' wx:if="{{fileInfo.status==1}}" bindtap='receive'>接收</button>
     <button class="btn" type='primary' wx:if="{{fileInfo.status==1}}" bindtap='giveBack'>不接收退回</button>
-    <picker value="{{index}}" range="{{directors}}" bindchange="sendToDirector">
+    <picker value="{{director}}" range="{{directors}}" bindchange="sendToDirector">
       <button class="btn" type='primary' wx:if="{{fileInfo.status==2 || fileInfo.status==6}}">呈送校办主任</button>
     </picker>
-    <picker value="{{index}}" range="{{leaders}}" bindchange="sendToLeader">
+    <picker value="{{leader}}" range="{{leaders}}" bindchange="sendToLeader">
       <button class="btn" type='primary' wx:if="{{fileInfo.status==2 || fileInfo.status==6}}">呈送校领导</button>
     </picker>
     <button class="btn" type='primary' wx:if="{{fileInfo.status==4 || fileInfo.status==5}}" bindtap='revoke'>收回呈送文件</button>
