@@ -35,7 +35,8 @@ Page({
       // ['', '申请状态', '接收', '不接收退回', '呈送校办主任', '呈送校领导', '签出成功通知取件', '签出不成功通知取件']
       status: 1,// 1: 未呈送， 2: 已呈送， 3: 收回， 4: 归还中， 5: 已归还
       statusStr: '',
-      target: ''
+      target: '',
+      zt: ''
     },
     fileCode: "XW2018120001",
     directors: [], // 校办主任
@@ -166,10 +167,10 @@ Page({
   },
 
   info: function(msg) {
-    wx.showModal({
-      title: '提示',
-      content: msg,
-    })
+    // wx.showModal({
+    //   title: '提示',
+    //   content: msg,
+    // })
   },
   error: function(msg){
     wx.showToast({
@@ -184,25 +185,22 @@ Page({
     let self = this;
     request({
       url: apis.receive,
+      method: "post",
       data: {
         wjcpbh: self.data.fileInfo.wjcpbh,
         timestamp: timestamp(),
-        decision: "接收"
+        decision: "接受"
       },
       success: function(res) {
-        if(res.status === 1) {
+        if(res.data.retcode === 0) {
           self.setData({
             "fileInfo.status": 2,
-            "fileInfo.statusStr": self.getStatusStr(2)
+            "fileInfo.statusStr": self.getStatusStr(2),
+            "fileInfo.zt": "接受"
           })
         }
       }
     });
-
-        self.setData({
-          "fileInfo.status": 2,
-          "fileInfo.statusStr": self.getStatusStr(2)
-        });
   },
 
   // 不接收退回
@@ -212,16 +210,18 @@ Page({
 
     request({
       url: apis.receive,
+      method: "post",
       data: {
         wjcpbh: self.data.fileInfo.wjcpbh,
         timestamp: timestamp(),
-        decision: "不接收"
+        decision: "不接受"
       },
       success: function(res) {
-        if(res.status === 1) {
+        if(res.data.retcode === 0) {
           self.setData({
             "fileInfo.status": 3,
-            "fileInfo.statusStr": self.getStatusStr(3)
+            "fileInfo.statusStr": self.getStatusStr(3),
+            "fileInfo.zt": "不接受"
           })
         } else {
 
@@ -248,7 +248,8 @@ Page({
         if (res.data.retcode === 0) {
           self.setData({
             "fileInfo.status": 4,
-            "fileInfo.statusStr": self.getStatusStr(4)
+            "fileInfo.statusStr": self.getStatusStr(4),
+            "fileInfo.zt": "校办主任"
           })
         } else {
           self.error('呈送失败:(');
@@ -277,7 +278,8 @@ Page({
         if (res.data.retcode === 0) {
           self.setData({
             "fileInfo.status": 5,
-            "fileInfo.statusStr": self.getStatusStr(5)
+            "fileInfo.statusStr": self.getStatusStr(5),
+            "fileInfo.zt": "校领导"
           })
         } else {
           self.error('呈送失败:(');
@@ -295,16 +297,18 @@ Page({
     this.info("调用签出成功通知取件接口，更改状态为签出成功通知取件状态");
     request({
       url: apis.checkout,
+      method: "post",
       data: {
         timestamp: timestamp(),
         decision: "签出成功",
         wjcpbh: self.data.fileInfo.wjcpbh,
       },
       success: function (res) {
-        if (res.status === 1) {
+        if (res.data.retcode === 0) {
           self.setData({
             "fileInfo.status": 7,
-            "fileInfo.statusStr": self.getStatusStr(7)
+            "fileInfo.statusStr": self.getStatusStr(7),
+            "fileInfo.zt": "签出成功"
           })
         }
       }
@@ -318,17 +322,44 @@ Page({
 
     request({
       url: apis.checkout,
+      method: "post",
       data: {
         wjcpbh: self.data.fileInfo.wjcpbh,
         timestamp: timestamp(),
         decision: "签出不成功"
       },
       success: function(res) {
-        if(res.status === 1) {
+        if(res.data.retcode === 0) {
           self.setData({
            "fileInfo.status": 8,
-           "fileInfo.statusStr": self.getStatusStr(8) 
+           "fileInfo.statusStr": self.getStatusStr(8) ,
+           "fileInfo.zt": "签出不成功"
           })
+        }
+      }
+    });
+  },
+
+  revert: function() {
+    let self = this;
+    this.info("调用签出不成功通知取件接口，更改状态为签出不成功通知取件状态");
+
+    request({
+      url: 'http://myform.fudan.edu.cn/api/v1/xwlwcl/reset_test',
+      method: "post",
+      data: {
+        // wjcpbh: self.data.fileInfo.wjcpbh,
+        timestamp: timestamp(),
+        decision: "签出不成功"
+      },
+      success: function (res) {
+        if (res.data.retcode === 0) {
+          self.search();
+          // self.setData({
+          //   "fileInfo.status": 8,
+          //   "fileInfo.statusStr": self.getStatusStr(8),
+          //   "fileInfo.zt": "签出不成功"
+          // })
         }
       }
     });

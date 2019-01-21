@@ -49,7 +49,7 @@
       <view class="label">会办单位:</view><view class="content">{{fileInfo.hbdw}}</view>
     </view>
     <view>
-      <view class="label">状态:</view><view class="content">{{fileInfo.statusStr}}</view>
+      <view class="label">状态:</view><view class="content">{{fileInfo.zt}}</view>
     </view>
     <!--
     <view wx:if="{{fileInfo.status==2}}">
@@ -76,17 +76,19 @@
   </view>
   
   <view class="operate" style="margin-top: 30rpx;" wx:if="{{fileInfo.wjcpbh}}">
-    <button class="btn" type='primary' wx:if="{{fileInfo.status==1}}" bindtap='receive'>接收</button>
-    <button class="btn" type='primary' wx:if="{{fileInfo.status==1}}" bindtap='giveBack'>不接收退回</button>
+    <button class="btn" type='primary' wx:if="{{fileInfo.zt=='已提交'}}" bindtap='receive'>接受</button>
+    <button class="btn" type='primary' wx:if="{{fileInfo.zt=='已提交'}}" bindtap='giveBack'>不接受退回</button>
     <picker value="{{director}}" range="{{directors}}" bindchange="sendToDirector">
-      <button class="btn" type='primary' wx:if="{{fileInfo.status==2 || fileInfo.status==6}}">呈送校办主任</button>
+      <button class="btn" type='primary' wx:if="{{fileInfo.zt=='接受'}}">呈送校办主任</button>
     </picker>
     <picker value="{{leader}}" range="{{leaders}}" bindchange="sendToLeader">
-      <button class="btn" type='primary' wx:if="{{fileInfo.status==2 || fileInfo.status==6}}">呈送校领导</button>
+      <button class="btn" type='primary' wx:if="{{fileInfo.zt=='接受'}}">呈送校领导</button>
     </picker>
-    <button class="btn" type='primary' wx:if="{{fileInfo.status==4 || fileInfo.status==5}}" bindtap='revoke'>收回呈送文件</button>
-    <button class="btn" type='primary' wx:if="{{fileInfo.status==6}}" bindtap='checkoutSuccessNotify'>签出成功通知取件</button>
-    <button class="btn" type='primary' wx:if="{{fileInfo.status==6}}" bindtap='checkoutFailNotify'>签出不成功通知取件</button>
+    <!--
+    <button class="btn" type='primary' wx:if="{{fileInfo.status=='校领导' || fileInfo.status=='校办主任'}}" bindtap='revoke'>收回呈送文件</button>-->
+    <button class="btn" type='primary' wx:if="{{fileInfo.zt=='校领导' || fileInfo.zt=='校办主任'}}" bindtap='checkoutSuccessNotify'>签出成功通知取件</button>
+    <button class="btn" type='primary' wx:if="{{fileInfo.zt=='校领导' || fileInfo.zt=='校办主任'}}" bindtap='checkoutFailNotify'>签出不成功通知取件</button>
+    <button class="btn" type="primary" bindtap='revert'>重置状态</button>
   </view>
 </view>
 <view class="dialog director-dialog">

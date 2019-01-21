@@ -2,16 +2,17 @@ const sha1 = require('./hmac').default;
 let count = 0;
 function request(obj) {
   let param = Object.assign({}, obj);
-  if(param.complete) {
+  // if(param.complete) {
     let complete = param.complete;
     param.complete = function(){
-      complete();
+      complete && complete();
       count--;
+      console.log('complelte.......');
       if(count==0) {
         wx.hideLoading();
       }
     }
-  }
+  // }
 
   if(param.data) {
     let sign = "";
@@ -28,6 +29,9 @@ function request(obj) {
     param.data.sign = sign;
   }
 
+  wx.showLoading({
+    title: '',
+  })
   count++;
   wx.request(param);
 }
